@@ -1,0 +1,121 @@
+{
+  "version": "0.1.0",
+  "name": "aidl_smart_contract_rust",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "uploadDatasetDetails",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "uploadedDataset",
+          "type": {
+            "defined": "DatasetObj"
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "BaseAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "totalDatasets",
+            "type": "u64"
+          },
+          {
+            "name": "datasetsList",
+            "type": {
+              "vec": {
+                "defined": "DatasetObj"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "DatasetObj",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "userAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "type": "string"
+          },
+          {
+            "name": "accuracyScore",
+            "type": "string"
+          },
+          {
+            "name": "dataType",
+            "type": "string"
+          },
+          {
+            "name": "fileType",
+            "type": "string"
+          },
+          {
+            "name": "modelsUsed",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "librariesUsed",
+            "type": {
+              "vec": "string"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "AxEL6oqhuMeeGnAZJ9rzoM9FztdBUt3t7LmKgUwKF3Dk"
+  }
+}
