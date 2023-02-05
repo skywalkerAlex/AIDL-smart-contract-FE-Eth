@@ -75,7 +75,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ## Installment
 - React.js: npx create-react-app aidl-smart-contract-js --use-npm
 - Bootstrap: npm install react-bootstrap bootstrap
-- Web3.js: npm install @project-serum/anchor @solana/web3.js
+- Web3.js: npm install web3
+- ethers: npm install ethers --save
+- dotEnv: npm install dotenv --save
+
+
 # As per latest changes you will need also t install the following packages:
 - npm install --save-dev react-app-rewired crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer process
   - Solution found here: https://github.com/ChainSafe/web3.js#web3-and-create-react-app
