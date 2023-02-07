@@ -1,5 +1,4 @@
 {
-  "homepage": "https://skywalkeralex.github.io/AIDL-smart-contract-js",
   "name": "aidl-smart-contract-fe-eth",
   "version": "0.1.2",
   "private": true,
@@ -23,7 +22,7 @@
     "browserify-zlib": "^0.2.0",
     "classnames": "2.3.1",
     "dotenv": "^16.0.3",
-    "ethers": "^6.0.2",
+    "ethers": "^5.4.4",
     "framer-motion": "^4.1.17",
     "match-sorter": "6.3.0",
     "moment": "2.29.4",

@@ -1,4 +1,4 @@
-# AIDL-smart-contract-js
+# AIDL-smart-contract-FE-Eth
 Thesis for Master in Artificial Intelligence and Deep Learning - Design and Implementation of a smart contract in a Blockchain Network to evaluate the characteristics of datasets.
 
 # Getting Started with Create React App
@@ -73,10 +73,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 ## Installment
-- React.js: npx create-react-app aidl-smart-contract-js --use-npm
+- React.js: npx create-react-app aidl-smart-contract-fe-eth --use-npm
 - Bootstrap: npm install react-bootstrap bootstrap
 - Web3.js: npm install web3
 - ethers: npm install ethers --save
+- ethersproject: npm i @ethersproject/providers
 - dotEnv: npm install dotenv --save
 
 

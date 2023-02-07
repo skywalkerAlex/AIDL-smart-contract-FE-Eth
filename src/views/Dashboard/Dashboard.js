@@ -44,7 +44,7 @@ import {useEffect, useCallback} from 'react';
 // Ethereum imports
 import abi from '../../smart_contract/idl.json';
 import DsDetailsForm from 'components/DatasetDetails/DatasetForm';
-require("dotenv").config()
+require("dotenv").config();
 const ethers=require("ethers");
 
 export default function Dashboard() {
@@ -56,7 +56,8 @@ export default function Dashboard() {
 	/**
 	 * Create a variable here that holds the contract address after you deploy!
 	 */
-	const contractAddress=process.env.DATASET_PORTAL_ADDRESS;
+	const contractAddress=process.env.REACT_APP_DATASET_PORTAL_ADDRESS;
+
 	/**
 	 * Create a variable here that references the abi content!
 	 */
@@ -93,6 +94,7 @@ export default function Dashboard() {
 
 			console.log("Connected", accounts[0]);
 			setWalletAddress(accounts[0]);
+			getAllDataSets();
 		} catch(error) {
 			console.error(error);
 		}
@@ -125,6 +127,7 @@ export default function Dashboard() {
 
 				console.log("Connected: ", accounts[0]);
 				setWalletAddress(accounts[0]);
+				return account;
 			} else {
 				console.error("No authorized account found");
 				alert('Authorized Account not found! Please use a valid account to connect 👻');
@@ -224,7 +227,7 @@ export default function Dashboard() {
 
 	const renderConnectedContainer=() => {
 
-		if(storedDatasetDetails.length===0) {
+		if(storedDatasetDetails.length==0) {
 			return (
 				<Flex
 					background='transparent'
@@ -258,10 +261,8 @@ export default function Dashboard() {
 				</Flex>
 			)
 		} else {
-
 			return (
 				<>
-					{/* <DsDetailsForm /> */}
 					<DsDetailsForm
 						passName={setName}
 						passAccuracyScore={setAccuracyScore}
@@ -278,15 +279,26 @@ export default function Dashboard() {
 							<CardHeader p='12px 0px 28px 0px'>
 								<Flex direction='column'>
 									<Text fontSize='lg' color='#fff' fontWeight='bold' pb='8px'>
-										Projects
+										Data Sets
+										{storedDatasetDetails.map((item) => {
+											return (
+												<>
+													<Text fontSize='lg' color='#fff' fontWeight='bold' pb='8px'>
+														{item.name} {item.accuracyScore} {item.dataType} {item.address}
+													</Text>
+												</>
+											);
+										}
+										)
+										}
 									</Text>
 									<Flex align='center'>
 										<Icon as={IoCheckmarkDoneCircleSharp} color='teal.300' w={4} h={4} pe='3px' />
 										<Text fontSize='sm' color='gray.400' fontWeight='normal'>
 											<Text fontWeight='bold' as='span'>
-												30 done
+												Total {storedDatasetDetails.length}
 											</Text>{' '}
-											this month.
+											uploaded.
 										</Text>
 									</Flex>
 								</Flex>
@@ -328,41 +340,6 @@ export default function Dashboard() {
 								</Tbody>
 							</Table>
 						</Card>
-						{/* Orders Overview */}
-						{/* <Card>
-							<CardHeader mb='32px'>
-								<Flex direction='column'>
-									<Text fontSize='lg' color='#fff' fontWeight='bold' mb='6px'>
-										Orders overview
-									</Text>
-									<Flex align='center'>
-										<Icon as={AiFillCheckCircle} color='green.500' w='15px' h='15px' me='5px' />
-										<Text fontSize='sm' color='gray.400' fontWeight='normal'>
-											<Text fontWeight='bold' as='span' color='gray.400'>
-												+30%
-											</Text>{' '}
-											this month
-										</Text>
-									</Flex>
-								</Flex>
-							</CardHeader>
-							<CardBody>
-								<Flex direction='column' lineHeight='21px'>
-									{timelineData.map((row, index, arr) => {
-										return (
-											<TimelineRow
-												logo={row.logo}
-												title={row.title}
-												date={row.date}
-												color={row.color}
-												index={index}
-												arrLength={arr.length}
-											/>
-										);
-									})}
-								</Flex>
-							</CardBody>
-						</Card> */}
 					</Grid>
 				</>
 			);
@@ -373,10 +350,11 @@ export default function Dashboard() {
 	// ##### Connected Ethereum Wallet Actions Start #####
 	const uploadDatasetDetails=async () => {
 		if(name.length===0) {
-			console.log("Not enough Details given!")
+			console.log("Not enough Details are given!")
+			alert('Not enough Details are given 👻');
 			return
 		}
-		const {ethereum}=window;
+		const ethereum=getEthereumObject();
 
 		if(!ethereum) {
 			console.error("Make sure you have Metamask!");
@@ -389,22 +367,22 @@ export default function Dashboard() {
 			dataType: dataType,
 			accuracyScore: accuracyScore,
 			fileType: fileType,
-			size: fileSize,
+			size: parseInt(fileSize)<1||NaN? 0:parseInt(fileSize),
 			modelsUsed: modelList,
 			librariesUsed: libraryList,
 		}
 		console.log('uploadDatasetDetails :', inputValue);
 		try {
 			const provider=new ethers.providers.Web3Provider(ethereum);
-			console.log('provider :', provider);
 			const signer=provider.getSigner();
-			console.log('signer :', signer);
 			const datasetPortalContract=new ethers.Contract(contractAddress, contractABI, signer);
 			console.log('datasetPortalContract :', datasetPortalContract);
 
+			const datasetPortal=await datasetPortalContract.getAllDatasets();
+			console.log("Retrieved all Datasets [getAllDataSets()] ", datasetPortal);
 
 			let totals=await datasetPortalContract.getTotalNumbers();
-			console.log("Retrieved total number of dataset uploaded...", totals.numberOfDataset);
+			console.log("Retrieved total number of dataset uploaded..."+totals.numberOfDataset);
 
 			/*
 			* Execute the actual wave from your smart contract
@@ -417,20 +395,21 @@ export default function Dashboard() {
 				inputValue.fileType,
 				inputValue.modelsUsed,
 				inputValue.librariesUsed,
-				{gasLimit: 300000});
+				{gasLimit: 500000});
 			console.log("Mining...", uploadDataset.hash);
 
 			await uploadDataset.wait();
 			console.log("Mined -- ", uploadDataset.hash);
 
 			totals=await datasetPortalContract.getTotalNumbers();
-			console.log("Retrieved total number of dataset uploaded...", totals.numberOfDataset);
-			console.log("Retrieved total size in MB of dataset uploaded...", totals.size);
+			console.log("Retrieved total number of dataset uploaded..."+totals.numberOfDataset);
+			console.log("Retrieved total size in MB of dataset uploaded..."+totals.size);
 			getAllDataSets();
 			console.log("Dataset Details successfully sent to Blockchain", inputValue)
 		} catch(error) {
 			console.log("Error sending Dataset Details :", error)
 		}
+
 	};
 
 	/*
@@ -438,7 +417,7 @@ export default function Dashboard() {
 	*/
 	const getAllDataSets=async () => {
 		try {
-			const {ethereum}=window;
+			const ethereum=getEthereumObject();
 			if(ethereum) {
 				const provider=new ethers.providers.Web3Provider(ethereum);
 				const signer=provider.getSigner();
@@ -447,27 +426,28 @@ export default function Dashboard() {
 				/*
 				 * Call the getAllDataSets method from your Smart Contract
 				 */
-				const datasetPortal=await datasetPortalContract.getAllDataSets();
-
+				const datasetPortal=await datasetPortalContract.getAllDatasets();
 				console.log("Retrieved all Datasets [getAllDataSets()] ", datasetPortal);
+
 				/*
 				 * We only need address, timestamp, name, size, accuracyScore and dataType in our UI 
 				 * so let's pick those out
 				 */
 				const storedDatasets=datasetPortal.map(dtset => {
 					return {
-						address: dtset.address,
+						address: dtset.user_address,
 						timestamp: new Date(dtset.timestamp*1000),
 						name: dtset.name,
 						size: dtset.size,
-						accuracyScore: dtset.accuracyScore,
-						dataType: dtset.dataType
+						accuracyScore: dtset.accuracy_score,
+						dataType: dtset.data_type
 					};
 				});
 
 				/*
 				 * Store our data in React State
 				 */
+				console.log("Retrieved all Datasets result", storedDatasets);
 				setStoredDatasetDetails(storedDatasets);
 			} else {
 				console.log("Ethereum object doesn't exist!")
@@ -480,9 +460,9 @@ export default function Dashboard() {
 
 
 	/*
- * When our component first mounts, let's check to see if we have a connected
- * Phantom Wallet
- */
+	* When our component first mounts, 
+	* let's check if we have a connected Wallet
+	*/
 	// UseEffects
 	useEffect(() => {
 		const onLoad=async () => {
@@ -490,6 +470,42 @@ export default function Dashboard() {
 		};
 		window.addEventListener('load', onLoad);
 		return () => window.removeEventListener('load', onLoad);
+	}, []);
+
+	/**
+	* Listen in for emitter events!
+	*/
+	useEffect(() => {
+		let datasetPortalContract;
+
+		const onNewDataset=(from, timestamp, dataset) => {
+			console.log("NewDataset ", from, timestamp, dataset);
+			setStoredDatasetDetails(prevState => [
+				...prevState,
+				{
+					address: dataset.user_address,
+					timestamp: new Date(dataset.timestamp*1000),
+					name: dataset.name,
+					size: dataset.size,
+					accuracyScore: dataset.accuracy_score,
+					dataType: dataset.data_type
+				},
+			]);
+		};
+
+		if(window.ethereum) {
+			const provider=new ethers.providers.Web3Provider(getEthereumObject());
+			const signer=provider.getSigner();
+
+			datasetPortalContract=new ethers.Contract(contractAddress, contractABI, signer);
+			datasetPortalContract.on("NewDataset", onNewDataset);
+		}
+
+		return () => {
+			if(datasetPortalContract) {
+				datasetPortalContract.off("NewDataset", onNewDataset);
+			}
+		};
 	}, []);
 
 	useEffect(() => {
@@ -557,16 +573,6 @@ export default function Dashboard() {
 										<StatNumber fontSize='lg' color='#fff'>
 											3,020 MB
 										</StatNumber>
-										{/* <StatHelpText
-											alignSelf='flex-end'
-											justifySelf='flex-end'
-											m='0px'
-											color='red.500'
-											fontWeight='bold'
-											ps='3px'
-											fontSize='md'>
-											-14%
-										</StatHelpText> */}
 									</Flex>
 								</Stat>
 								<Spacer />
@@ -577,64 +583,6 @@ export default function Dashboard() {
 						</CardBody>
 					</Card>
 				</SimpleGrid>
-				{/* Satisfaction Rate */}
-				{/* <Card gridArea={{ md: '2 / 1 / 3 / 2', '2xl': 'auto' }}>
-					<CardHeader mb='24px'>
-						<Flex direction='column'>
-							<Text color='#fff' fontSize='lg' fontWeight='bold' mb='4px'>
-								Satisfaction Rate
-							</Text>
-							<Text color='gray.400' fontSize='sm'>
-								From all projects
-							</Text>
-						</Flex>
-					</CardHeader>
-					<Flex direction='column' justify='center' align='center'>
-						<Box zIndex='-1'>
-							<CircularProgress
-								size={200}
-								value={50}
-								thickness={8}
-								color='#582CFF'
-								variant='vision'
-								bottom='20%'
-								rounded>
-								<CircularProgressLabel>
-									<IconBox mb='10px' mx='auto' bg='brand.200' 
-									borderRadius='50%' w='48px' h='48px'>
-										<Icon as={BiHappy} color='#fff' w='30px' h='30px' />
-									</IconBox>
-								</CircularProgressLabel>
-							</CircularProgress>
-						</Box>
-						<Stack
-							direction='row'
-							spacing={{ sm: '42px', md: '68px' }}
-							justify='center'
-							maxW={{ sm: '270px', md: '300px', lg: '100%' }}
-							mx={{ sm: 'auto', md: '0px' }}
-							p='18px 22px'
-							bg='linear-gradient(126.97deg, rgb(6, 11, 40) 28.26%, rgba(10, 14, 35) 91.2%)'
-							borderRadius='20px'
-							position='absolute'
-							bottom='-5%'>
-							<Text fontSize='xs' color='gray.400'>
-								0%
-							</Text>
-							<Flex direction='column' align='center' minW='80px'>
-								<Text color='#fff' fontSize='28px' fontWeight='bold'>
-									95%
-								</Text>
-								<Text fontSize='xs' color='gray.400'>
-									Based on likes
-								</Text>
-							</Flex>
-							<Text fontSize='xs' color='gray.400'>
-								100%
-							</Text>
-						</Stack>
-					</Flex>
-				</Card> */}
 			</Grid>
 
 			{walletAddress? renderConnectedContainer():renderNotConnectedContainer()}
