@@ -218,8 +218,7 @@ function DsDetailsForm(props) {
                         type='text'
                         pattern="[0-9]*"
                         onChange={onFileSizeChange}
-                        placeholder='Data size (MB)'
-                        value={0}
+                        placeholder='input size in MB'
                     />
                 </GradientBorder>
             </Flex>

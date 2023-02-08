@@ -1,18 +1,13 @@
 // Chakra imports
 import React, {useState} from 'react';
 import {
-	Box,
 	Button,
-	CircularProgress,
-	CircularProgressLabel,
 	Flex,
 	Grid,
 	Icon,
 	SimpleGrid,
 	Spacer,
-	Stack,
 	Stat,
-	StatHelpText,
 	StatLabel,
 	StatNumber,
 	Table,
@@ -30,16 +25,11 @@ import IconBox from 'components/Icons/IconBox';
 // Icons
 import {DocumentIcon, WalletIcon} from 'components/Icons/Icons.js';
 import DashboardTableRow from 'components/Tables/DashboardTableRow';
-import TimelineRow from 'components/Tables/TimelineRow';
-import {AiFillCheckCircle} from 'react-icons/ai';
-import {BiHappy} from 'react-icons/bi';
-import {BsArrowRight} from 'react-icons/bs';
+import {BsArrowRight, BsArrowClockwise} from 'react-icons/bs';
 import {IoCheckmarkDoneCircleSharp} from 'react-icons/io5';
 import medusa from 'assets/img/cardimgfree.png';
-
-import {dashboardTableData, timelineData} from 'variables/general';
 // React
-import {useEffect, useCallback} from 'react';
+import {useEffect} from 'react';
 
 // Ethereum imports
 import abi from '../../smart_contract/idl.json';
@@ -52,6 +42,8 @@ export default function Dashboard() {
 	// State
 	const getEthereumObject=() => window.ethereum;
 	const [walletAddress, setWalletAddress]=useState(null);
+	const [totalNumberOfDataset, setTotalNumberOfDataset]=useState(null);
+	const [sizeOfDataset, setSizeOfDataset]=useState(null);
 
 	/**
 	 * Create a variable here that holds the contract address after you deploy!
@@ -114,6 +106,7 @@ export default function Dashboard() {
 
 			console.log("We have the Ethereum wallet: ", ethereum);
 			const accounts=await ethereum.request({method: "eth_accounts"});
+			getTotalNumbers();
 
 			if(accounts.length!==0) {
 				const account=accounts[0];
@@ -130,7 +123,7 @@ export default function Dashboard() {
 				return account;
 			} else {
 				console.error("No authorized account found");
-				alert('Authorized Account not found! Please use a valid account to connect 👻');
+				// alert('Authorized Account not found! Please use a valid account to connect 👻');
 				return null;
 			}
 		} catch(error) {
@@ -154,7 +147,7 @@ export default function Dashboard() {
 		</>
 	);
 
-	const renderWellcomeUser=() => (
+	const renderWelcomeUser=() => (
 		<>
 			<Text fontSize='3xl' color='gray.400' fontWeight='bold' >
 				Welcome!
@@ -227,38 +220,50 @@ export default function Dashboard() {
 
 	const renderConnectedContainer=() => {
 
-		if(storedDatasetDetails.length==0) {
+		if(storedDatasetDetails.length===0||storedDatasetDetails===undefined||(storedDatasetDetails.length===1&&storedDatasetDetails[0].name==="")) {
 			return (
-				<Flex
-					background='transparent'
-					borderRadius='20px'
-					direction='column'
-					p='40px'
-					minW={{base: "unset", md: "430px", xl: "450px"}}
-					w='100%'
-					mx={{base: "0px"}}
-					bg={{
-						base: "rgb(19,21,56)",
-					}}
-					boxShadow='dark-lg'
-				>
-					<Button
-						variant="solid"
-						colorScheme='brand'
-						onClick={uploadDatasetDetails}
+				<>
+					<Flex
+						background='transparent'
+						borderRadius='20px'
+						direction='column'
+						p='40px'
+						minW={{base: "unset", md: "430px", xl: "450px"}}
+						w='100%'
+						mx={{base: "0px"}}
+						bg={{
+							base: "rgb(19,21,56)",
+						}}
+						boxShadow='dark-lg'
 					>
-						<Text
-							fontSize='2xl'
-							color='purple.200'
-							fontWeight='bold'
-							cursor='pointer'
-							transition='all .3s ease'
-							my={{sm: '1.5rem', lg: '0px'}}>
-							Upload your first Dataset Details
-						</Text>
-					</Button>
+						<Button
+							variant="solid"
+							colorScheme='brand'
+							onClick={uploadDatasetDetails}
+						>
+							<Text
+								fontSize='2xl'
+								color='purple.200'
+								fontWeight='bold'
+								cursor='pointer'
+								transition='all .3s ease'
+								my={{sm: '1.5rem', lg: '0px'}}>
+								Upload your first Dataset Details
+							</Text>
+						</Button>
 
-				</Flex>
+					</Flex>
+					<DsDetailsForm
+						passName={setName}
+						passAccuracyScore={setAccuracyScore}
+						passDataType={setDataType}
+						passFileType={setFileType}
+						passFileSize={setFileSize}
+						passModelList={setModelList}
+						passLibraryList={setLibraryList}
+						passDataDetails={uploadDatasetDetails}
+					/>
+				</>
 			)
 		} else {
 			return (
@@ -280,17 +285,23 @@ export default function Dashboard() {
 								<Flex direction='column'>
 									<Text fontSize='lg' color='#fff' fontWeight='bold' pb='8px'>
 										Data Sets
-										{storedDatasetDetails.map((item) => {
-											return (
-												<>
-													<Text fontSize='lg' color='#fff' fontWeight='bold' pb='8px'>
-														{item.name} {item.accuracyScore} {item.dataType} {item.address}
-													</Text>
-												</>
-											);
-										}
-										)
-										}
+										<Button
+											p='0px'
+											variant="no-hover"
+											onClick={getAllDataSets}
+											colorScheme='brand'
+											my={{sm: '1.5rem', lg: '0px'}}>
+											<Icon
+												as={BsArrowClockwise}
+												w='20px'
+												h='20px'
+												color='#fff'
+												fontSize='3xl'
+												mx='.3rem'
+												cursor='pointer'
+												pt='4px'
+											/>
+										</Button>
 									</Text>
 									<Flex align='center'>
 										<Icon as={IoCheckmarkDoneCircleSharp} color='teal.300' w={4} h={4} pe='3px' />
@@ -311,29 +322,40 @@ export default function Dashboard() {
 											color='gray.400'
 											fontFamily='Plus Jakarta Display'
 											borderBottomColor='#56577A'>
-											Companies
+											Address
 										</Th>
 										<Th color='gray.400' fontFamily='Plus Jakarta Display' borderBottomColor='#56577A'>
-											Members
+											Name
 										</Th>
 										<Th color='gray.400' fontFamily='Plus Jakarta Display' borderBottomColor='#56577A'>
-											Budget
+											Data Type
 										</Th>
 										<Th color='gray.400' fontFamily='Plus Jakarta Display' borderBottomColor='#56577A'>
-											Completion
+											Size
+										</Th>
+										<Th color='gray.400' fontFamily='Plus Jakarta Display' borderBottomColor='#56577A'>
+											Libraries Used
+										</Th>
+										<Th color='gray.400' fontFamily='Plus Jakarta Display' borderBottomColor='#56577A'>
+											Models Used
+										</Th>
+										<Th color='gray.400' fontFamily='Plus Jakarta Display' borderBottomColor='#56577A'>
+											Accuracy Score
 										</Th>
 									</Tr>
 								</Thead>
 								<Tbody>
-									{dashboardTableData.map((row, index, arr) => {
+									{storedDatasetDetails.map((row, index, arr) => {
 										return (
 											<DashboardTableRow
+												address={row.address}
 												name={row.name}
-												logo={row.logo}
-												members={row.members}
-												budget={row.budget}
-												progression={row.progression}
-												lastItem={index===arr.length-1? true:false}
+												dataType={row.dataType}
+												dataSize={row.size}
+												progression={row.accuracyScore}
+												librariesUsed={row.librariesUsed}
+												modelsUsed={row.modelsUsed}
+												lastItem={index===arr.length-1}
 											/>
 										);
 									})}
@@ -379,10 +401,7 @@ export default function Dashboard() {
 			console.log('datasetPortalContract :', datasetPortalContract);
 
 			const datasetPortal=await datasetPortalContract.getAllDatasets();
-			console.log("Retrieved all Datasets [getAllDataSets()] ", datasetPortal);
-
-			let totals=await datasetPortalContract.getTotalNumbers();
-			console.log("Retrieved total number of dataset uploaded..."+totals.numberOfDataset);
+			console.log("Retrieved all Datasets ", datasetPortal);
 
 			/*
 			* Execute the actual wave from your smart contract
@@ -395,15 +414,12 @@ export default function Dashboard() {
 				inputValue.fileType,
 				inputValue.modelsUsed,
 				inputValue.librariesUsed,
-				{gasLimit: 500000});
+				{gasLimit: 800000});
 			console.log("Mining...", uploadDataset.hash);
 
 			await uploadDataset.wait();
 			console.log("Mined -- ", uploadDataset.hash);
-
-			totals=await datasetPortalContract.getTotalNumbers();
-			console.log("Retrieved total number of dataset uploaded..."+totals.numberOfDataset);
-			console.log("Retrieved total size in MB of dataset uploaded..."+totals.size);
+			clearForm();
 			getAllDataSets();
 			console.log("Dataset Details successfully sent to Blockchain", inputValue)
 		} catch(error) {
@@ -440,14 +456,15 @@ export default function Dashboard() {
 						name: dtset.name,
 						size: dtset.size,
 						accuracyScore: dtset.accuracy_score,
-						dataType: dtset.data_type
+						dataType: dtset.data_type,
+						librariesUsed: dtset.libraries_used,
+						modelsUsed: dtset.models_used,
 					};
 				});
 
 				/*
 				 * Store our data in React State
 				 */
-				console.log("Retrieved all Datasets result", storedDatasets);
 				setStoredDatasetDetails(storedDatasets);
 			} else {
 				console.log("Ethereum object doesn't exist!")
@@ -455,6 +472,37 @@ export default function Dashboard() {
 		} catch(error) {
 			console.log(error);
 		}
+	}
+	/*
+	* This method gets total number of datasets and total size of datasets from connected User on the blockchain
+	*/
+	const getTotalNumbers=async () => {
+		try {
+			const ethereum=getEthereumObject();
+			if(ethereum) {
+				const provider=new ethers.providers.Web3Provider(ethereum);
+				const datasetPortalContract=new ethers.Contract(contractAddress, contractABI, provider);
+
+				let totals=await datasetPortalContract.getTotalNumbers();
+				console.log("Retrieved total number of dataset uploaded..."+totals.numberOfDataset);
+				console.log("Retrieved total size in MB of dataset uploaded..."+totals.size);
+				setTotalNumberOfDataset(totals.numberOfDataset);
+				setSizeOfDataset(totals.size);
+			} else {
+				console.log("Ethereum object doesn't exist!")
+			}
+		} catch(error) {
+			console.log(error);
+		}
+	}
+	const clearForm=() => {
+		setName("");
+		setAccuracyScore("");
+		setDataType("");
+		setFileType("");
+		setFileSize("");
+		setLibraryList("");
+		setModelList("");
 	}
 	// ##### Connected Ethereum Wallet Actions End #####
 
@@ -488,7 +536,9 @@ export default function Dashboard() {
 					name: dataset.name,
 					size: dataset.size,
 					accuracyScore: dataset.accuracy_score,
-					dataType: dataset.data_type
+					dataType: dataset.data_type,
+					librariesUsed: dataset.libraries_used,
+					modelsUsed: dataset.models_used
 				},
 			]);
 		};
@@ -525,11 +575,40 @@ export default function Dashboard() {
 					<CardBody w='100%' h='100%'>
 						<Flex flexDirection={{sm: 'column', lg: 'row'}} w='100%' h='100%'>
 							<Flex flexDirection='column' h='100%' p='50px' minW='60%' lineHeight='1.6'>
-								{walletAddress? renderUser():renderWellcomeUser()}
+								{walletAddress? renderUser():renderWelcomeUser()}
 							</Flex>
 						</Flex>
 					</CardBody>
 				</Card>
+				<Button
+					p='0px'
+					variant="ghost"
+					onClick={getTotalNumbers}
+					colorScheme='brand'
+					my={{sm: '1.5rem', lg: '0px'}}>
+					<Text
+						fontSize='2xl'
+						color='#fff'
+						fontWeight='bold'
+						cursor='pointer'
+						transition='all .5s ease'
+						my={{sm: '1.5rem', lg: '0px'}}
+						_hover={{me: '4px'}}>
+						<Spacer />Refresh the numbers
+					</Text>
+					<Icon
+						as={BsArrowClockwise}
+						w='20px'
+						h='20px'
+						color='#fff'
+						fontSize='3xl'
+						transition='all .3s ease'
+						mx='.3rem'
+						cursor='pointer'
+						pt='4px'
+						_hover={{transform: 'translateX(30%)'}}
+					/>
+				</Button>
 				<SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px'>
 					{/* MiniStatistics Card Total Datasets uploaded*/}
 					<Card>
@@ -541,18 +620,8 @@ export default function Dashboard() {
 									</StatLabel>
 									<Flex>
 										<StatNumber fontSize='lg' color='#fff'>
-											$53,000
+											{""+totalNumberOfDataset}
 										</StatNumber>
-										<StatHelpText
-											alignSelf='flex-end'
-											justifySelf='flex-end'
-											m='0px'
-											color='green.400'
-											fontWeight='bold'
-											ps='3px'
-											fontSize='md'>
-											+55%
-										</StatHelpText>
 									</Flex>
 								</Stat>
 								<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
@@ -571,7 +640,7 @@ export default function Dashboard() {
 									</StatLabel>
 									<Flex>
 										<StatNumber fontSize='lg' color='#fff'>
-											3,020 MB
+											{""+sizeOfDataset+" MB"}
 										</StatNumber>
 									</Flex>
 								</Stat>
