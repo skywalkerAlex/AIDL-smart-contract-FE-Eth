@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 
 // Chakra imports
 import {
@@ -7,13 +7,12 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Link,
     Text,
     Select,
-    color,
-    Switch,
+    Spacer,
+    Icon,
 } from "@chakra-ui/react";
-
+import {BsArrowClockwise} from 'react-icons/bs';
 
 // Custom Components
 import GradientBorder from "components/GradientBorder/GradientBorder";
@@ -24,8 +23,6 @@ import dataProperties from "components/DatasetDetails/DataProperties.json";
 function DsDetailsForm(props) {
     const titleColor="white";
     const textColor="gray.400";
-
-    const [showModel, setShowModel]=useState(false);
 
     const onNameChange=(e) => {
         const value=e.target.value;
@@ -74,16 +71,6 @@ function DsDetailsForm(props) {
     };
 
 
-    const showModelForm=(event) => {
-        setShowModel(!showModel);
-    };
-
-    // UseEffects
-    useEffect(() => {
-
-    }, [setShowModel]);
-
-
     const modelForm=() => {
         return (
             <Flex
@@ -128,6 +115,7 @@ function DsDetailsForm(props) {
                         h='46px'
                         type='text'
                         onChange={onAccuracyScoreChange}
+                        value={props.accuracyScore}
                         placeholder='Place your accuracy score'
                     />
                 </GradientBorder>
@@ -163,22 +151,23 @@ function DsDetailsForm(props) {
                         placeholder='Choose your models'
                         isMulti
                         onChange={onModelListChange}
+                        value={props.modelList}
                         options={dataProperties.models}
                     />
 
                     <MultiSelect
-                        // variant='outline' 
-                        // color={textColor}
-                        // backgroundColor={{
-                        // base: "rgb(19,21,54)",
-                        // }}
-                        // border='transparent'
-                        // borderRadius='20px'
-                        // fontSize='md'
-                        // size='lg'
-                        // w={{ base: "100%"}}
-                        // maxW='100%'
-                        // h='46px'
+                        variant='outline'
+                        color={textColor}
+                        backgroundColor={{
+                            base: "rgb(19,21,54)",
+                        }}
+                        border='transparent'
+                        borderRadius='20px'
+                        fontSize='md'
+                        size='lg'
+                        w={{base: "100%"}}
+                        maxW='100%'
+                        h='46px'
                         placeholder='Choose your libraries'
                         name="libraries"
                         isMulti
@@ -186,6 +175,7 @@ function DsDetailsForm(props) {
                         classNamePrefix="select"
                         styles={colourStyles}
                         onChange={onLibraryListChange}
+                        value={props.libraryList}
                         options={dataProperties.libraries}
                     />
                 </GradientBorder>
@@ -218,19 +208,48 @@ function DsDetailsForm(props) {
                         type='text'
                         pattern="[0-9]*"
                         onChange={onFileSizeChange}
+                        value={props.fileSize}
                         placeholder='input size in MB'
                     />
                 </GradientBorder>
+                <Button
+                    p='0px'
+                    variant="ghost"
+                    onClick={props.clearDataDetails}
+                    colorScheme='brand'
+                    my={{sm: '1.5rem', lg: '0px'}}>
+                    <Text
+                        fontSize='2xl'
+                        color='#fff'
+                        fontWeight='bold'
+                        cursor='pointer'
+                        transition='all .5s ease'
+                        my={{sm: '1.5rem', lg: '0px'}}
+                        _hover={{me: '4px'}}>
+                        <Spacer />Clear form
+                    </Text>
+                    <Icon
+                        as={BsArrowClockwise}
+                        w='20px'
+                        h='20px'
+                        color='#fff'
+                        fontSize='3xl'
+                        transition='all .3s ease'
+                        mx='.3rem'
+                        cursor='pointer'
+                        pt='4px'
+                        _hover={{transform: 'translateX(30%)'}}
+                    />
+                </Button>
             </Flex>
         );
     }
 
     const dataOptions=(type) => {
         return dataProperties[type].map(data =>
-            <option key={data.value} styles={[{"color": textColor}]} value={data.value}>{data.label}</option>
+            <option key={data.value} styles={[{"color": '#fff'}]} value={data.value}>{data.label}</option>
         )
     }
-    // backgroundColor="rgb(19,21,54)" 
 
 
     const dot=(color='transparent') => ({
@@ -344,7 +363,8 @@ function DsDetailsForm(props) {
                                 h='46px'
                                 type='text'
                                 onChange={onNameChange}
-                                placeholder='Your name'
+                                value={props.name}
+                                placeholder='Place a name for your project'
                             />
                         </GradientBorder>
                         <FormLabel
@@ -400,21 +420,7 @@ function DsDetailsForm(props) {
                                 {dataOptions("fileType")}
                             </Select>
                         </GradientBorder>
-                        <Flex align='center' mb='20px'>
-                            <Switch
-                                id="hasModelFormId"
-                                variant='brand'
-                                colorScheme='brand' me='10px'
-                                isChecked={showModel}
-                                onChange={showModelForm}
-                            />
-                            <FormLabel htmlFor="hasModelFormId"
-                                noOfLines={1} fontSize='md'
-                                color={textColor} fontWeight='400'>
-                                Do you want to upload the characteristics of the model?
-                            </FormLabel >
-                        </Flex>
-                        {showModel? modelForm():null}
+                        {modelForm()}
 
                         <Button
                             variant='brand'
@@ -431,24 +437,6 @@ function DsDetailsForm(props) {
                             Upload Dataset
                         </Button>
                     </FormControl>
-                    {/* <Flex
-                flexDirection='column'
-                justifyContent='center'
-                alignItems='center'
-                maxW='100%'
-                mt='0px'>
-                <Text color={textColor} fontWeight='medium'>
-                  Already have an account?
-                  <Link
-                    color={titleColor}
-                    as='span'
-                    ms='5px'
-                    href='#'
-                    fontWeight='bold'>
-                    Sign In
-                  </Link>
-                </Text>
-              </Flex> */}
                 </Flex>
             </GradientBorder>
         </Flex>

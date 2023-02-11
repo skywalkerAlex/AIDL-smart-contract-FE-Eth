@@ -15,8 +15,16 @@ import {
 	Text,
 	Th,
 	Thead,
-	Tr
+	Tr,
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogContent,
+	AlertDialogOverlay,
+	Link,
 } from '@chakra-ui/react';
+import {ExternalLinkIcon} from '@chakra-ui/icons';
 // Custom components
 import Card from 'components/Card/Card.js';
 import CardBody from 'components/Card/CardBody.js';
@@ -42,6 +50,7 @@ export default function Dashboard() {
 	// State
 	const getEthereumObject=() => window.ethereum;
 	const [walletAddress, setWalletAddress]=useState(null);
+	const [hasEthereumWallet, setHasEthereumWallet]=useState(false);
 	const [totalNumberOfDataset, setTotalNumberOfDataset]=useState(null);
 	const [sizeOfDataset, setSizeOfDataset]=useState(null);
 
@@ -68,7 +77,6 @@ export default function Dashboard() {
 	const [libraryList, setLibraryList]=useState([]);
 
 	// Actions
-
 	/*
 	* Connect to the user's wallet.
 	*/
@@ -76,10 +84,11 @@ export default function Dashboard() {
 		try {
 			const ethereum=getEthereumObject();
 			if(!ethereum) {
-				alert(<><h2>we strongly suggest to download the <a href='https://metamask.io/download/' title='Metamask wallet' target="_blank">Metamask wallet</a></h2></>);
+				setHasEthereumWallet(false);
+				alert('Ethereum Wallet not found! Get Metamask to connect 👻');
 				return;
 			}
-
+			setHasEthereumWallet(true);
 			const accounts=await ethereum.request({
 				method: "eth_requestAccounts",
 			});
@@ -99,10 +108,12 @@ export default function Dashboard() {
 			* First make sure we have access to the Ethereum object.
 			*/
 			if(!ethereum) {
+				setHasEthereumWallet(false);
 				console.error("Make sure you have Metamask!");
 				alert('Ethereum Wallet not found! Get Metamask to connect 👻');
 				return null;
 			}
+			setHasEthereumWallet(true);
 
 			console.log("We have the Ethereum wallet: ", ethereum);
 			const accounts=await ethereum.request({method: "eth_accounts"});
@@ -114,16 +125,12 @@ export default function Dashboard() {
 				/*
 				* Set the user's publicKey in state to be used later!
 				*/
-				const accounts=await ethereum.request({
-					method: "eth_requestAccounts",
-				});
-
-				console.log("Connected: ", accounts[0]);
-				setWalletAddress(accounts[0]);
+				setWalletAddress(account);
+				getAllDataSets();
 				return account;
 			} else {
 				console.error("No authorized account found");
-				// alert('Authorized Account not found! Please use a valid account to connect 👻');
+				alert('Authorized Account not found! Please use a valid account to connect 👻');
 				return null;
 			}
 		} catch(error) {
@@ -156,8 +163,8 @@ export default function Dashboard() {
 				Here you can validate the dataset, or even better the results of your Neural Network!
 			</Text>
 			<Text fontSize='xl' color='gray.400' fontWeight='normal' mb='auto'>
-				Connect to your favourite Wallet and start validating the dataset! <br />
-				We suggest to use the <a href='https://metamask.io/download/' title='Metamask wallet' target="_blank">Metamask wallet</a>
+				Connect to your favorite Wallet and start validating the dataset! <br />
+				We suggest to use the <a href='https://metamask.io/download/' title='Metamask wallet' target="_blank" rel="noreferrer">Metamask wallet</a>
 			</Text>
 			<Spacer />
 			<Flex align='center' >
@@ -254,6 +261,11 @@ export default function Dashboard() {
 
 					</Flex>
 					<DsDetailsForm
+						name={name}
+						accuracyScore={accuracyScore}
+						dataType={dataType}
+						fileType={fileType}
+						fileSize={fileSize}
 						passName={setName}
 						passAccuracyScore={setAccuracyScore}
 						passDataType={setDataType}
@@ -262,6 +274,7 @@ export default function Dashboard() {
 						passModelList={setModelList}
 						passLibraryList={setLibraryList}
 						passDataDetails={uploadDatasetDetails}
+						clearDataDetails={clearForm}
 					/>
 				</>
 			)
@@ -269,6 +282,11 @@ export default function Dashboard() {
 			return (
 				<>
 					<DsDetailsForm
+						name={name}
+						accuracyScore={accuracyScore}
+						dataType={dataType}
+						fileType={fileType}
+						fileSize={fileSize}
 						passName={setName}
 						passAccuracyScore={setAccuracyScore}
 						passDataType={setDataType}
@@ -277,6 +295,7 @@ export default function Dashboard() {
 						passModelList={setModelList}
 						passLibraryList={setLibraryList}
 						passDataDetails={uploadDatasetDetails}
+						clearDataDetails={clearForm}
 					/>
 					<Grid templateColumns={{sm: '1fr', md: '1fr', lg: '2fr'}} gap='24px'>
 						{/* Projects */}
@@ -379,11 +398,12 @@ export default function Dashboard() {
 		const ethereum=getEthereumObject();
 
 		if(!ethereum) {
+			setHasEthereumWallet(false);
 			console.error("Make sure you have Metamask!");
 			alert('Ethereum Wallet not found! Get Metamask to connect 👻');
 			return null;
 		}
-
+		setHasEthereumWallet(true);
 		let inputValue={
 			name: name,
 			dataType: dataType,
@@ -420,8 +440,9 @@ export default function Dashboard() {
 			await uploadDataset.wait();
 			console.log("Mined -- ", uploadDataset.hash);
 			clearForm();
-			getAllDataSets();
 			console.log("Dataset Details successfully sent to Blockchain", inputValue)
+			getAllDataSets();
+			getTotalNumbers();
 		} catch(error) {
 			console.log("Error sending Dataset Details :", error)
 		}
@@ -528,19 +549,7 @@ export default function Dashboard() {
 
 		const onNewDataset=(from, timestamp, dataset) => {
 			console.log("NewDataset ", from, timestamp, dataset);
-			setStoredDatasetDetails(prevState => [
-				...prevState,
-				{
-					address: dataset.user_address,
-					timestamp: new Date(dataset.timestamp*1000),
-					name: dataset.name,
-					size: dataset.size,
-					accuracyScore: dataset.accuracy_score,
-					dataType: dataset.data_type,
-					librariesUsed: dataset.libraries_used,
-					modelsUsed: dataset.models_used
-				},
-			]);
+			// setStoredDatasetDetails(dataset);
 		};
 
 		if(window.ethereum) {
@@ -580,78 +589,82 @@ export default function Dashboard() {
 						</Flex>
 					</CardBody>
 				</Card>
-				<Button
-					p='0px'
-					variant="ghost"
-					onClick={getTotalNumbers}
-					colorScheme='brand'
-					my={{sm: '1.5rem', lg: '0px'}}>
-					<Text
-						fontSize='2xl'
-						color='#fff'
-						fontWeight='bold'
-						cursor='pointer'
-						transition='all .5s ease'
-						my={{sm: '1.5rem', lg: '0px'}}
-						_hover={{me: '4px'}}>
-						<Spacer />Refresh the numbers
-					</Text>
-					<Icon
-						as={BsArrowClockwise}
-						w='20px'
-						h='20px'
-						color='#fff'
-						fontSize='3xl'
-						transition='all .3s ease'
-						mx='.3rem'
-						cursor='pointer'
-						pt='4px'
-						_hover={{transform: 'translateX(30%)'}}
-					/>
-				</Button>
-				<SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px'>
-					{/* MiniStatistics Card Total Datasets uploaded*/}
-					<Card>
-						<CardBody>
-							<Flex flexDirection='row' align='center' justify='center' w='100%'>
-								<Stat me='auto'>
-									<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
-										Total Datasets uploaded
-									</StatLabel>
-									<Flex>
-										<StatNumber fontSize='lg' color='#fff'>
-											{""+totalNumberOfDataset}
-										</StatNumber>
+				{hasEthereumWallet? (
+					<>
+						<Button
+							p='0px'
+							variant="ghost"
+							onClick={getTotalNumbers}
+							colorScheme='brand'
+							my={{sm: '1.5rem', lg: '0px'}}>
+							<Text
+								fontSize='2xl'
+								color='#fff'
+								fontWeight='bold'
+								cursor='pointer'
+								transition='all .5s ease'
+								my={{sm: '1.5rem', lg: '0px'}}
+								_hover={{me: '4px'}}>
+								<Spacer />Refresh the numbers
+							</Text>
+							<Icon
+								as={BsArrowClockwise}
+								w='20px'
+								h='20px'
+								color='#fff'
+								fontSize='3xl'
+								transition='all .3s ease'
+								mx='.3rem'
+								cursor='pointer'
+								pt='4px'
+								_hover={{transform: 'translateX(30%)'}}
+							/>
+						</Button>
+						<SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px'>
+							{/* MiniStatistics Card Total Datasets uploaded*/}
+							<Card>
+								<CardBody>
+									<Flex flexDirection='row' align='center' justify='center' w='100%'>
+										<Stat me='auto'>
+											<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
+												Total Datasets uploaded
+											</StatLabel>
+											<Flex>
+												<StatNumber fontSize='lg' color='#fff'>
+													{""+totalNumberOfDataset}
+												</StatNumber>
+											</Flex>
+										</Stat>
+										<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
+											<WalletIcon h={'24px'} w={'24px'} color='#fff' />
+										</IconBox>
 									</Flex>
-								</Stat>
-								<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
-									<WalletIcon h={'24px'} w={'24px'} color='#fff' />
-								</IconBox>
-							</Flex>
-						</CardBody>
-					</Card>
-					{/* MiniStatistics Card Total Size */}
-					<Card>
-						<CardBody>
-							<Flex flexDirection='row' align='center' justify='center' w='100%'>
-								<Stat>
-									<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
-										Total Size in MB uploaded
-									</StatLabel>
-									<Flex>
-										<StatNumber fontSize='lg' color='#fff'>
-											{""+sizeOfDataset+" MB"}
-										</StatNumber>
+								</CardBody>
+							</Card>
+							{/* MiniStatistics Card Total Size */}
+							<Card>
+								<CardBody>
+									<Flex flexDirection='row' align='center' justify='center' w='100%'>
+										<Stat>
+											<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
+												Total Size in MB uploaded
+											</StatLabel>
+											<Flex>
+												<StatNumber fontSize='lg' color='#fff'>
+													{""+sizeOfDataset+" MB"}
+												</StatNumber>
+											</Flex>
+										</Stat>
+										<Spacer />
+										<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
+											<DocumentIcon h={'24px'} w={'24px'} color='#fff' />
+										</IconBox>
 									</Flex>
-								</Stat>
-								<Spacer />
-								<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
-									<DocumentIcon h={'24px'} w={'24px'} color='#fff' />
-								</IconBox>
-							</Flex>
-						</CardBody>
-					</Card>
-				</SimpleGrid>
+								</CardBody>
+							</Card>
+						</SimpleGrid>
+					</>
+				):null}
 			</Grid>
 
 			{walletAddress? renderConnectedContainer():renderNotConnectedContainer()}

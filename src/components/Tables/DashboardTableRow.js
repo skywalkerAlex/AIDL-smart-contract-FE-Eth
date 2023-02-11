@@ -17,10 +17,7 @@
 */
 
 import {
-  Avatar,
-  AvatarGroup,
   Flex,
-  Icon,
   Progress,
   Td,
   Text,
@@ -31,9 +28,8 @@ import React from "react";
 
 function DashboardTableRow(props) {
   const {address, name, dataType, dataSize, librariesUsed, modelsUsed, progression, lastItem}=props;
-  const textColor=useColorModeValue("gray.700", "white");
   return (
-    <Tr key={address}>
+    <Tr key={address+"_"+name+"_"+progression} >
       <Td
         minWidth={{sm: "250px"}}
         ps='0px'
@@ -41,7 +37,7 @@ function DashboardTableRow(props) {
         border={lastItem? "none":null}>
         <Flex align='center' py='.8rem' minWidth='100%' flexWrap='nowrap'>
           {/* <Icon as={logo} h={"24px"} w={"24px"} me='18px' /> */}
-          <Text fontSize='sm' color='#fff' fontWeight='normal' minWidth='100%'>
+          <Text fontSize='sm' color={'#fff'} fontWeight='normal' minWidth='100%'>
             {address}
           </Text>
         </Flex>
@@ -63,40 +59,22 @@ function DashboardTableRow(props) {
         </Text>
       </Td>
       <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
-        {/* <AvatarGroup size='xs' showBorder={false}> */}
         {librariesUsed? librariesUsed.map((lib) => {
           return (
             <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
               {lib}
             </Text>
-            // <Avatar
-            //   name='Ryan Florence'
-            //   src={lib}
-            //   showBorder={true}
-            //   border='none'
-            //   _hover={{zIndex: "3", cursor: "pointer"}}
-            // />
           );
         }):null}
-        {/* </AvatarGroup> */}
       </Td>
       <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
-        {/* <AvatarGroup size='xs' showBorder={false}> */}
         {modelsUsed? modelsUsed.map((model) => {
           return (
             <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
               {model}
             </Text>
-            // <Avatar
-            //   name='Ryan Florence'
-            //   src={lib}
-            //   showBorder={true}
-            //   border='none'
-            //   _hover={{zIndex: "3", cursor: "pointer"}}
-            // />
           );
         }):null}
-        {/* </AvatarGroup> */}
       </Td>
       <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
         <Flex direction='column'>
