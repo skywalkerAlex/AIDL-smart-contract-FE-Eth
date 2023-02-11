@@ -17,10 +17,7 @@
 */
 
 import {
-  Avatar,
-  AvatarGroup,
   Flex,
-  Icon,
   Progress,
   Td,
   Text,
@@ -30,55 +27,67 @@ import {
 import React from "react";
 
 function DashboardTableRow(props) {
-  const { logo, name, members, budget, progression, lastItem } = props;
-  const textColor = useColorModeValue("gray.700", "white");
+  const {address, name, dataType, dataSize, librariesUsed, modelsUsed, progression, lastItem}=props;
   return (
-    <Tr>
+    <Tr key={address+"_"+name+"_"+progression} >
       <Td
-        minWidth={{ sm: "250px" }}
+        minWidth={{sm: "250px"}}
         ps='0px'
         borderBottomColor='#56577A'
-        border={lastItem ? "none" : null}>
+        border={lastItem? "none":null}>
         <Flex align='center' py='.8rem' minWidth='100%' flexWrap='nowrap'>
-          <Icon as={logo} h={"24px"} w={"24px"} me='18px' />
-          <Text fontSize='sm' color='#fff' fontWeight='normal' minWidth='100%'>
-            {name}
+          {/* <Icon as={logo} h={"24px"} w={"24px"} me='18px' /> */}
+          <Text fontSize='sm' color={'#fff'} fontWeight='normal' minWidth='100%'>
+            {address}
           </Text>
         </Flex>
       </Td>
 
-      <Td borderBottomColor='#56577A' border={lastItem ? "none" : null}>
-        <AvatarGroup size='xs' showBorder={false}>
-          {members.map((member) => {
-            return (
-              <Avatar
-                name='Ryan Florence'
-                src={member}
-                showBorder={false}
-                border='none'
-                _hover={{ zIndex: "3", cursor: "pointer" }}
-              />
-            );
-          })}
-        </AvatarGroup>
-      </Td>
-      <Td borderBottomColor='#56577A' border={lastItem ? "none" : null}>
+      <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
         <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
-          {budget}
+          {name}
         </Text>
       </Td>
-      <Td borderBottomColor='#56577A' border={lastItem ? "none" : null}>
+      <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
+        <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
+          {dataType}
+        </Text>
+      </Td>
+      <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
+        <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
+          {""+dataSize}
+        </Text>
+      </Td>
+      <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
+        {librariesUsed? librariesUsed.map((lib) => {
+          return (
+            <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
+              {lib}
+            </Text>
+          );
+        }):null}
+      </Td>
+      <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
+        {modelsUsed? modelsUsed.map((model) => {
+          return (
+            <Text fontSize='sm' color='#fff' fontWeight='bold' pb='.5rem'>
+              {model}
+            </Text>
+          );
+        }):null}
+      </Td>
+      <Td borderBottomColor='#56577A' border={lastItem? "none":null}>
         <Flex direction='column'>
           <Text
             fontSize='sm'
             color='#fff'
             fontWeight='bold'
-            pb='.2rem'>{`${progression}%`}</Text>
+            pb='.2rem'>{`${progression*100}%`}</Text>
           <Progress
             colorScheme='brand'
             h='3px'
             bg='#2D2E5F'
-            value={progression}
+            value={progression*100}
             borderRadius='30px'
           />
         </Flex>

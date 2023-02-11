@@ -1,23 +1,8 @@
-import React, { useEffect , useState } from 'react';
-<<<<<<< HEAD
+import React, {useEffect, useState} from 'react';
 // import twitterLogo from './assets/twitter-logo.svg';
 import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-=======
-import twitterLogo from './assets/twitter-logo.svg';
-import logo from './logo.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import Button from 'react-bootstrap/Button';
-import Badge from 'react-bootstrap/Badge';
-import Card  from 'react-bootstrap/Card';
-
-import idl from './idl.json';
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
-import { Program, Provider, web3 } from '@project-serum/anchor';
-import kp from './keypair.json'
->>>>>>> main
 
 function App() {
   return (

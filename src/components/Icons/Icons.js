@@ -16,9 +16,9 @@
 
 */
 
-import { createIcon } from "@chakra-ui/icons";
+import {createIcon} from "@chakra-ui/icons";
 
-export const AdobexdLogo = createIcon({
+export const AdobexdLogo=createIcon({
   displayName: "AdobexdLogo",
   viewBox: "0 0 24 24",
   path: (
@@ -35,7 +35,7 @@ export const AdobexdLogo = createIcon({
   ),
 });
 
-export const AtlassianLogo = createIcon({
+export const AtlassianLogo=createIcon({
   displayName: "AtlassianLogo",
   viewBox: "0 0 24 24",
   path: (
@@ -52,7 +52,7 @@ export const AtlassianLogo = createIcon({
   ),
 });
 
-export const CartIcon = createIcon({
+export const CartIcon=createIcon({
   displayName: "CartIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -63,7 +63,7 @@ export const CartIcon = createIcon({
   ),
 });
 
-export const ClockIcon = createIcon({
+export const ClockIcon=createIcon({
   displayName: "ClockIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -84,7 +84,7 @@ export const ClockIcon = createIcon({
     </g>
   ),
 });
-export const CreativeTimLogo = createIcon({
+export const CreativeTimLogo=createIcon({
   displayName: "CreativeTimLogo",
   viewBox: "0 0 100 100",
   path: (
@@ -137,7 +137,7 @@ export const CreativeTimLogo = createIcon({
   // </chakra.svg>
 });
 
-export const CreditIcon = createIcon({
+export const CreditIcon=createIcon({
   displayName: "CreditIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -148,7 +148,7 @@ export const CreditIcon = createIcon({
   ),
 });
 
-export const DashboardLogo = createIcon({
+export const DashboardLogo=createIcon({
   displayName: "DashboardLogo",
   viewBox: "0 0 1000 257",
   path: (
@@ -203,7 +203,7 @@ export const DashboardLogo = createIcon({
   ),
 });
 
-export const DashboardLogoWhite = createIcon({
+export const DashboardLogoWhite=createIcon({
   displayName: "DashboardLogo",
   viewBox: "0 0 163.5 42",
   path: (
@@ -220,7 +220,7 @@ export const DashboardLogoWhite = createIcon({
   ),
 });
 
-export const DocumentIcon = createIcon({
+export const DocumentIcon=createIcon({
   displayName: "DocumentIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -237,7 +237,7 @@ export const DocumentIcon = createIcon({
   ),
 });
 
-export const GlobeIcon = createIcon({
+export const GlobeIcon=createIcon({
   displayName: "GlobeIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -280,7 +280,7 @@ export const GlobeIcon = createIcon({
   ),
 });
 
-export const HelpIcon = createIcon({
+export const HelpIcon=createIcon({
   displayName: "HelpIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -291,7 +291,7 @@ export const HelpIcon = createIcon({
   ),
 });
 
-export const HomeIcon = createIcon({
+export const HomeIcon=createIcon({
   displayName: "HomeIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -308,7 +308,7 @@ export const HomeIcon = createIcon({
   ),
 });
 
-export const InvisionLogo = createIcon({
+export const InvisionLogo=createIcon({
   displayName: "InvisionLogo",
   viewBox: "0 0 24 24",
   path: (
@@ -325,7 +325,7 @@ export const InvisionLogo = createIcon({
   ),
 });
 
-export const JiraLogo = createIcon({
+export const JiraLogo=createIcon({
   displayName: "JiraLogo",
   viewBox: "0 0 24 24",
   path: (
@@ -346,7 +346,7 @@ export const JiraLogo = createIcon({
   ),
 });
 
-export const MastercardIcon = createIcon({
+export const MastercardIcon=createIcon({
   displayName: "MastercardIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -362,7 +362,7 @@ export const MastercardIcon = createIcon({
   ),
 });
 
-export const PayPalIcon = createIcon({
+export const PayPalIcon=createIcon({
   displayName: "PayPalIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -379,7 +379,7 @@ export const PayPalIcon = createIcon({
   ),
 });
 
-export const PersonIcon = createIcon({
+export const PersonIcon=createIcon({
   displayName: "PersonIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -390,7 +390,7 @@ export const PersonIcon = createIcon({
   ),
 });
 
-export const ProfileIcon = createIcon({
+export const ProfileIcon=createIcon({
   displayName: "ProfileIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -404,7 +404,7 @@ export const ProfileIcon = createIcon({
   ),
 });
 
-export const RocketIcon = createIcon({
+export const RocketIcon=createIcon({
   displayName: "RocketIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -421,7 +421,7 @@ export const RocketIcon = createIcon({
   ),
 });
 
-export const SettingsIcon = createIcon({
+export const SettingsIcon=createIcon({
   displayName: "SettingsIcon",
   viewBox: "0 0 24 24",
   // path can also be an array of elements, if you have multiple paths, lines, shapes, etc.
@@ -436,11 +436,11 @@ export const SettingsIcon = createIcon({
   ),
 });
 
-export const SlackLogo = createIcon({
+export const SlackLogo=createIcon({
   displayName: "SlackLogo",
   viewBox: "0 0 24 24",
   path: (
-    <g clip-path='url(#clip0)' fill-rule='evenodd' clip-rule='evenodd'>
+    <g clip-path='url(#clip0)' fill-rule='evenodd' clipRule='evenodd'>
       <path
         d='M7.832.5c-1.105 0-2 .919-1.999 2.05 0 1.13.895 2.048 2 2.05h2V2.55c.001-1.13-.894-2.048-2-2.05zm0 5.467H2.5c-1.106 0-2.001.918-2 2.05-.002 1.13.894 2.048 2 2.05h5.332c1.106-.001 2.002-.919 2-2.05.002-1.132-.894-2.05-2-2.05z'
         fill='#36C5F0'
@@ -461,7 +461,7 @@ export const SlackLogo = createIcon({
   ),
 });
 
-export const SpotifyLogo = createIcon({
+export const SpotifyLogo=createIcon({
   displayName: "SpotifyLogo",
   viewBox: "0 0 24 24",
   path: (
@@ -474,7 +474,7 @@ export const SpotifyLogo = createIcon({
   ),
 });
 
-export const SupportIcon = createIcon({
+export const SupportIcon=createIcon({
   // Doesn't display the full icon without w and h being specified
   displayName: "BuildIcon",
   viewBox: "0 0 24 24",
@@ -486,7 +486,7 @@ export const SupportIcon = createIcon({
   ),
 });
 
-export const StatsIcon = createIcon({
+export const StatsIcon=createIcon({
   displayName: "StatsIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -497,7 +497,7 @@ export const StatsIcon = createIcon({
   ),
 });
 
-export const WalletIcon = createIcon({
+export const WalletIcon=createIcon({
   displayName: "WalletIcon",
   viewBox: "0 0 24 24",
   path: (
@@ -514,7 +514,7 @@ export const WalletIcon = createIcon({
   ),
 });
 
-export const VisaIcon = createIcon({
+export const VisaIcon=createIcon({
   displayName: "VisaIcon",
   viewBox: "0 0 25 9",
   color: "#fff",
@@ -527,7 +527,7 @@ export const VisaIcon = createIcon({
       xmlns='http://www.w3.org/2000/svg'>
       <path
         fill-rule='evenodd'
-        clip-rule='evenodd'
+        clipRule='evenodd'
         d='M12.6708 2.96349C12.6568 4.15055 13.653 4.81298 14.4034 5.20684C15.1744 5.61099 15.4333 5.87013 15.4304 6.23147C15.4245 6.78459 14.8153 7.02862 14.2452 7.03812C13.2505 7.05475 12.6723 6.74889 12.2125 6.51753L11.8542 8.32341C12.3155 8.55247 13.1696 8.75217 14.0554 8.76087C16.1345 8.76087 17.4947 7.65543 17.5021 5.94145C17.5102 3.76625 14.7087 3.64579 14.7278 2.67348C14.7344 2.37871 14.9956 2.06408 15.568 1.98406C15.8512 1.94368 16.6332 1.91274 17.5198 2.35252L17.8677 0.605286C17.391 0.418253 16.7782 0.239136 16.0153 0.239136C14.0583 0.239136 12.6819 1.35962 12.6708 2.96349ZM21.2115 0.389687C20.8319 0.389687 20.5118 0.628245 20.3691 0.99433L17.3991 8.63249H19.4767L19.8901 7.40183H22.429L22.6689 8.63249H24.5L22.9021 0.389687H21.2115ZM21.5021 2.61641L22.1016 5.7116H20.4596L21.5021 2.61641ZM10.1518 0.389687L8.51418 8.63249H10.4939L12.1308 0.389687H10.1518ZM7.22303 0.389687L5.16233 6.00003L4.32878 1.22966C4.23097 0.697187 3.84472 0.389687 3.41579 0.389687H0.0471011L0 0.629037C0.691574 0.790671 1.47729 1.0514 1.95326 1.33033C2.24457 1.50067 2.32775 1.64964 2.42336 2.05458L4.00214 8.63249H6.0945L9.3021 0.389687H7.22303Z'
         fill='white'
       />
@@ -535,7 +535,7 @@ export const VisaIcon = createIcon({
   ),
 });
 
-export const BillIcon = createIcon({
+export const BillIcon=createIcon({
   displayName: "BillIcon",
   viewBox: "0 0 20 18",
   path: (
@@ -553,7 +553,7 @@ export const BillIcon = createIcon({
   ),
 });
 
-export const GraphIcon = createIcon({
+export const GraphIcon=createIcon({
   displayName: "GraphIcon",
   viewBox: "0 0 61 20",
   path: (
@@ -574,7 +574,7 @@ export const GraphIcon = createIcon({
   ),
 });
 
-export const FulgerIcon = createIcon({
+export const FulgerIcon=createIcon({
   displayName: "FulgerIcon",
   viewBox: "0 0 14 24",
   path: (
@@ -592,7 +592,7 @@ export const FulgerIcon = createIcon({
   ),
 });
 
-export const CarIcon = createIcon({
+export const CarIcon=createIcon({
   displayName: "CarIcon",
   viewBox: "0 0 22 19",
   path: (
@@ -618,7 +618,7 @@ export const CarIcon = createIcon({
   ),
 });
 
-export const FulgerWhiteIcon = createIcon({
+export const FulgerWhiteIcon=createIcon({
   displayName: "FulgerWhiteIcon",
   viewBox: "0 0 18 24",
   path: (
@@ -636,7 +636,7 @@ export const FulgerWhiteIcon = createIcon({
   ),
 });
 
-export const SimmmpleLogoWhite = createIcon({
+export const SimmmpleLogoWhite=createIcon({
   displayName: "SimmmpleLogoWhite",
   viewBox: "0 0 22 22",
   path: (

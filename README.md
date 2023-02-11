@@ -1,4 +1,4 @@
-# AIDL-smart-contract-js
+# AIDL-smart-contract-FE-Eth
 Thesis for Master in Artificial Intelligence and Deep Learning - Design and Implementation of a smart contract in a Blockchain Network to evaluate the characteristics of datasets.
 
 # Getting Started with Create React App
@@ -73,9 +73,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 ## Installment
-- React.js: npx create-react-app aidl-smart-contract-js --use-npm
+- React.js: npx create-react-app aidl-smart-contract-fe-eth --use-npm
 - Bootstrap: npm install react-bootstrap bootstrap
-- Web3.js: npm install @project-serum/anchor @solana/web3.js
+- Web3.js: npm install web3
+- ethers: npm install ethers --save
+- ethersproject: npm i @ethersproject/providers
+- dotEnv: npm install dotenv --save
+
+
 # As per latest changes you will need also t install the following packages:
 - npm install --save-dev react-app-rewired crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer process
   - Solution found here: https://github.com/ChainSafe/web3.js#web3-and-create-react-app
